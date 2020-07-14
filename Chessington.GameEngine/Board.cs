@@ -65,9 +65,10 @@ namespace Chessington.GameEngine
             OnCurrentPlayerChanged(CurrentPlayer);
         }
 
-        public bool IsPositionValid(int row, int col)
+        public bool IsPositionValid(Square square)
         {
-            return row >= 0 && row < GameSettings.BoardSize && col >= 0 && col < GameSettings.BoardSize;
+            return square.Row >= 0 && square.Row < GameSettings.BoardSize &&
+                   square.Col >= 0 && square.Col < GameSettings.BoardSize;
         }
 
         public bool IsSquareEmpty(Square square)
