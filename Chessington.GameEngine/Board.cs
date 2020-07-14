@@ -69,6 +69,11 @@ namespace Chessington.GameEngine
         {
             return row >= 0 && row < GameSettings.BoardSize && col >= 0 && col < GameSettings.BoardSize;
         }
+
+        public bool IsSquareEmpty(Square square)
+        {
+            return (board[square.Row, square.Col] == null);
+        }
         
         public delegate void PieceCapturedEventHandler(Piece piece);
         

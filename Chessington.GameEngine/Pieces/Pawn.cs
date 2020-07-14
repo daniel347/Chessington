@@ -13,15 +13,22 @@ namespace Chessington.GameEngine.Pieces
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
             var currentPos = board.FindPiece(this);
-            
             var availableMoves = new List<Square>();
-            availableMoves.Add(GetNSquaresForward(currentPos, 1));
+            
+            var oneSquareAhead = GetNSquaresForward(currentPos, 1);
+            var twoSquaresAhead = GetNSquaresForward(currentPos, 2);
 
-            if (isFirstMove)
+            if (!board.IsSquareEmpty(oneSquareAhead))
             {
-                availableMoves.Add(GetNSquaresForward(currentPos, 2));
+                return availableMoves;
             }
             
+            availableMoves.Add(oneSquareAhead);
+            if (isFirstMove && board.IsSquareEmpty(twoSquaresAhead))
+            {
+                availableMoves.Add(twoSquaresAhead);
+            }
+
             return availableMoves;
         }
 
@@ -46,6 +53,5 @@ namespace Chessington.GameEngine.Pieces
 
             return newSquare;
         }
-
     }
 }
