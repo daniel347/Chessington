@@ -8,23 +8,13 @@ namespace Chessington.GameEngine.Pieces
     {
         public Rook(Player player)
             : base(player) { }
+        
+        private readonly LateralMove lateralMove = new LateralMove();
 
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
             var currentPos = board.FindPiece(this);
-
-            var availableMoves = new List<Square>();
-
-            for (var i = 0; i < GameSettings.BoardSize; i++)
-                availableMoves.Add(Square.At(currentPos.Row, i));
-
-            for (var i = 0; i < GameSettings.BoardSize; i++)
-                availableMoves.Add(Square.At(i, currentPos.Col));
-
-            //Get rid of our starting location.
-            availableMoves.RemoveAll(s => s == currentPos);
-
-            return availableMoves;
+            return lateralMove.GetLateralMoves(board, currentPos);
         }
     }
 }
