@@ -8,21 +8,44 @@ namespace Chessington.GameEngine.Pieces
         public Pawn(Player player) 
             : base(player) { }
 
+        private bool IsFirstMove { get; set; } = true;
+
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
             var currentPos = board.FindPiece(this);
-            var moveDir = 0;
+            
+            var availableMoves = new List<Square>();
+            availableMoves.Add(GetNSquaresForward(currentPos, 1));
+
+            if (IsFirstMove)
+            {
+                availableMoves.Add(GetNSquaresForward(currentPos, 2));
+            }
+            
+            return availableMoves;
+        }
+
+        public override void MoveTo(Board board, Square newSquare)
+        {
+            base.MoveTo(board, newSquare);
+            IsFirstMove = false;
+        }
+
+        private Square GetNSquaresForward(Square currentPos, int N)
+        {
+            Square newSquare;
             
             if (this.Player == Player.White)
             {
-                moveDir = -1;
+                newSquare = Square.At(currentPos.Row - N, currentPos.Col);
             }
-            else if (this.Player == Player.Black)
+            else
             {
-                moveDir = 1;
+                newSquare = Square.At(currentPos.Row + N, currentPos.Col);
             }
-            
-            return new List<Square>() {Square.At(currentPos.Row + moveDir, currentPos.Col)} ;
+
+            return newSquare;
         }
+
     }
 }
