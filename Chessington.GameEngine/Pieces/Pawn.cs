@@ -8,7 +8,7 @@ namespace Chessington.GameEngine.Pieces
         public Pawn(Player player) 
             : base(player) { }
 
-        private bool IsFirstMove { get; set; } = true;
+        private bool isFirstMove = true;
 
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
@@ -17,7 +17,7 @@ namespace Chessington.GameEngine.Pieces
             var availableMoves = new List<Square>();
             availableMoves.Add(GetNSquaresForward(currentPos, 1));
 
-            if (IsFirstMove)
+            if (isFirstMove)
             {
                 availableMoves.Add(GetNSquaresForward(currentPos, 2));
             }
@@ -28,7 +28,7 @@ namespace Chessington.GameEngine.Pieces
         public override void MoveTo(Board board, Square newSquare)
         {
             base.MoveTo(board, newSquare);
-            IsFirstMove = false;
+            isFirstMove = false;
         }
 
         private Square GetNSquaresForward(Square currentPos, int N)

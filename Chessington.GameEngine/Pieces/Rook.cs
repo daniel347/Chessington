@@ -15,10 +15,10 @@ namespace Chessington.GameEngine.Pieces
 
             var availableMoves = new List<Square>();
 
-            for (var i = 0; i < 8; i++)
+            for (var i = 0; i < GameSettings.BoardSize; i++)
                 availableMoves.Add(Square.At(currentPos.Row, i));
 
-            for (var i = 0; i < 8; i++)
+            for (var i = 0; i < GameSettings.BoardSize; i++)
                 availableMoves.Add(Square.At(i, currentPos.Col));
 
             //Get rid of our starting location.
