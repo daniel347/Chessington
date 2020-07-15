@@ -75,7 +75,7 @@ namespace Chessington.GameEngine
         {
             return (board[square.Row, square.Col] == null);
         }
-        
+
         public delegate void PieceCapturedEventHandler(Piece piece);
         
         public event PieceCapturedEventHandler PieceCaptured;

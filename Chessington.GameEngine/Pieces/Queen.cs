@@ -6,11 +6,14 @@ namespace Chessington.GameEngine.Pieces
 {
     public class Queen : Piece
     {
-        public Queen(Player player)
-            : base(player) { }
+        public Queen(Player player) : base(player)
+        {
+            lateralMove = new LateralMove(player);
+            diagonalMove = new DiagonalMove(player);
+        }
         
-        private readonly LateralMove lateralMove = new LateralMove();
-        private readonly DiagonalMove diagonalMove = new DiagonalMove();
+        private readonly LateralMove lateralMove;
+        private readonly DiagonalMove diagonalMove;
 
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
@@ -21,7 +24,7 @@ namespace Chessington.GameEngine.Pieces
 
             // Remove start square, duplicates and return
             availableMoves.RemoveAll(s => s == Square.At(4, 4));
-            return availableMoves;
+            return availableMoves.Where(board.IsPositionValid);
         }
     }
 }

@@ -5,10 +5,12 @@ namespace Chessington.GameEngine.Pieces
 {
     public class Bishop : Piece
     {
-        public Bishop(Player player)
-            : base(player) { }
-        
-        private readonly DiagonalMove diagonalMove = new DiagonalMove();
+        public Bishop(Player player) : base(player)
+        {
+            diagonalMove = new DiagonalMove(player);
+        }
+
+        private readonly DiagonalMove diagonalMove;
 
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
@@ -16,7 +18,7 @@ namespace Chessington.GameEngine.Pieces
             var availableMoves = diagonalMove.GetDiagonalMoves(board, currentPos).ToList();
             availableMoves.RemoveAll(s => s == Square.At(4, 4));
                 
-            return availableMoves;
+            return availableMoves.Where(board.IsPositionValid);
         }
     }
 }

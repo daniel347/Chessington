@@ -7,10 +7,17 @@ namespace Chessington.GameEngine
     {
         LeadingWhiteDiagonal, 
         LeadingBlackDiagonal
-    } 
-    
+    }
+
     public class DiagonalMove
     {
+        private Player player;
+
+        public DiagonalMove(Player player)
+        {
+            this.player = player;
+        }
+        
         public IEnumerable<Square> GetDiagonalMoves(Board board, Square currentPos)
         {
             var availableMoves = GetMovesInLine(board, currentPos, Diagonal.LeadingBlackDiagonal).ToList();
@@ -50,16 +57,34 @@ namespace Chessington.GameEngine
                 
                 if (!board.IsSquareEmpty(square))
                 {
-                    if (crossedPiece)
+                    if (HandleBlockingPieceAndBreak(board, square, crossedPiece, ref availableMoves))
                     {
                         break;
                     }
-                    
-                    availableMoves.Clear();
                 }
-                availableMoves.Add(square);
+                else
+                {
+                    availableMoves.Add(square);
+                }
             }
             return availableMoves;
+        }
+        
+        private bool HandleBlockingPieceAndBreak(Board board, Square square, bool crossedPiece, ref List<Square> availableMoves)
+        {
+            if (crossedPiece)
+            {
+                if (board.GetPiece(square).Player != player)
+                { 
+                    // if the piece is an enemy piece, can capture it
+                    availableMoves.Add(square);
+                }
+                
+                return true;
+            }
+            // If the loop hasn't passed the piece being moved yet all the positions so far are invalid
+            availableMoves.Clear();
+            return false;
         }
     }
 }

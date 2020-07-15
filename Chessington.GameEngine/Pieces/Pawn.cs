@@ -18,13 +18,13 @@ namespace Chessington.GameEngine.Pieces
             var oneSquareAhead = GetNSquaresForward(currentPos, 1);
             var twoSquaresAhead = GetNSquaresForward(currentPos, 2);
 
-            if (!board.IsSquareEmpty(oneSquareAhead))
+            if (!board.IsPositionValid(oneSquareAhead)  || !board.IsSquareEmpty(oneSquareAhead))
             {
                 return availableMoves;
             }
             
             availableMoves.Add(oneSquareAhead);
-            if (isFirstMove && board.IsSquareEmpty(twoSquaresAhead))
+            if (isFirstMove && board.IsPositionValid(twoSquaresAhead) && board.IsSquareEmpty(twoSquaresAhead))
             {
                 availableMoves.Add(twoSquaresAhead);
             }

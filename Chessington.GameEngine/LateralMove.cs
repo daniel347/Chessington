@@ -8,9 +8,16 @@ namespace Chessington.GameEngine
         Horizontal,
         Vertical
     }
-    
+
     public class LateralMove
     {
+        private Player player;
+
+        public LateralMove(Player player)
+        {
+            this.player = player;
+        }
+        
         public IEnumerable<Square> GetLateralMoves(Board board, Square currentPos)
         {
             var availableMovesHorizontally = GetMovesInLine(board, currentPos, Direction.Horizontal);
@@ -22,38 +29,57 @@ namespace Chessington.GameEngine
         private IEnumerable<Square> GetMovesInLine(Board board, Square currentPos, Direction dir)
         {
             var availableMoves = new List<Square>();
+            var crossedPiece = false; // decides if the piece we intend to move has been crossed
             
             for (var i = 0; i < GameSettings.BoardSize; i++)
             {
                 Square square;
-                int piecePosition;  // the piece position along the axis we are moving
                 
                 if (dir == Direction.Horizontal)
                 {
                     square = Square.At(currentPos.Row, i);
-                    piecePosition = currentPos.Col;
                 }
                 else
                 {
                     square = Square.At(i, currentPos.Col);
-                    piecePosition = currentPos.Row;
                 }
-                
+
+                if (square == currentPos)
+                {
+                    crossedPiece = true;
+                    continue;
+                }
+
                 if (!board.IsSquareEmpty(square))
                 {
-                    if (i < piecePosition)
-                    {
-                        availableMoves.Clear();
-                    } 
-                    else if (i > piecePosition)
+                    if (HandleBlockingPieceAndBreak(board, square, crossedPiece, ref availableMoves))
                     {
                         break;
                     }
                 }
-                availableMoves.Add(square);
+                else
+                {
+                    availableMoves.Add(square);
+                }
             }
-
             return availableMoves;
+        }
+
+        private bool HandleBlockingPieceAndBreak(Board board, Square square, bool crossedPiece, ref List<Square> availableMoves)
+        {
+            if (crossedPiece)
+            {
+                if (board.GetPiece(square).Player != player)
+                { 
+                    // if the piece is an enemy piece, can capture it
+                    availableMoves.Add(square);
+                }
+                
+                return true;
+            }
+            // If the loop hasn't passed the piece being moved yet all the positions so far are invalid
+            availableMoves.Clear();
+            return false;
         }
     }
 }

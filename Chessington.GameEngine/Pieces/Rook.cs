@@ -6,15 +6,19 @@ namespace Chessington.GameEngine.Pieces
 {
     public class Rook : Piece
     {
-        public Rook(Player player)
-            : base(player) { }
+        public Rook(Player player) : base(player)
+        {
+            lateralMove = new LateralMove(player);
+        }
         
-        private readonly LateralMove lateralMove = new LateralMove();
+        private readonly LateralMove lateralMove;
 
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
             var currentPos = board.FindPiece(this);
-            return lateralMove.GetLateralMoves(board, currentPos);
+            var availableMoves = lateralMove.GetLateralMoves(board, currentPos).ToList();
+
+            return availableMoves.Where(board.IsPositionValid);
         }
     }
 }
